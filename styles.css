@@ -19,7 +19,11 @@ body {
 }
 
 
-
+.elemento {
+    text-align: -webkit-match-parent;
+    text-align: match-parent;
+    text-align: inherit;
+}
 
 main.container {
     padding: 20px; /* Ajuste o valor conforme necessário */
