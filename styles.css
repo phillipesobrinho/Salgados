@@ -1,0 +1,293 @@
+/* Estilos gerais */
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f8f8f8;
+    color: #333;
+}
+
+/* Outros estilos (cabeçalho, etc.) */
+/* ... (Seus estilos existentes) ... */
+
+/* Estilos para a imagem de fundo e texto */
+.menu-image {
+    position: relative; /* Para posicionar o overlay */
+    overflow: hidden; /* Para garantir que a imagem não vaze */
+    background: linear-gradient(rgba(247, 95, 8, 0.815), rgba(190, 140, 106, 0.5))
+    linear-gradient(orange yellow)
+}
+
+
+
+
+main.container {
+    padding: 20px; /* Ajuste o valor conforme necessário */
+}
+
+/* Espaçamento entre as imagens */
+.menus .col-12 { /* Seletor mais específico */
+    margin-bottom: 20px; /* Espaço entre os cards */
+    margin-top: 20px
+}
+
+/* Espaçamento superior para a primeira imagem */
+.box-gourmet {
+    margin-top: 50px; /* Ajuste este valor conforme necessário */
+    height: 400px;
+    position: relative;
+    overflow: hidden;
+    border-radius: 10px;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+}
+
+.spacer {
+    height: 100px;
+}
+
+.navbar-verde {
+    background-color: #236635;
+    border-radius: 10px;
+    width: 100%;
+    margin: 0 auto;
+  
+}
+
+.elemento {
+    text-align: -webkit-match-parent;
+    text-align: match-parent;
+    text-align: inherit;
+}
+.navbar-verde .navbar-brand {
+    color: white;
+  
+}
+
+.navbar-verde .navbar-nav .nav-link {
+    color: white;
+    
+}
+
+/*primeira IMG */
+
+.box-gourmet {
+    height: 400px;
+    position: relative;
+}
+
+.box-gourmet {
+    height: 400px;
+    position: relative;
+    overflow: hidden;
+    border-radius: 10px;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+    margin-top: 50px;
+}
+
+
+
+  
+  .box-gourmet-background {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    position: absolute;
+    z-index: -1;
+    filter: brightness(0.7); /* Ajuste o brilho da imagem de fundo */
+  }
+  
+  .box-gourmet-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    color: white;
+  }
+  
+  .discount {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background-color: #236635;
+    padding: 5px 10px;
+    border-radius: 5px;
+    color: white;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  }
+  
+  .box-gourmet-content h2 {
+    font-size: 2rem; /* Ajuste o tamanho da fonte */
+    margin-bottom: 10px;
+  }
+  
+  .box-gourmet-content p {
+    font-size: 1.2rem; /* Ajuste o tamanho da fonte */
+    margin-bottom: 20px;
+  }
+  
+  .box-gourmet-content button {
+    background-color: #236635; /* Cor do botão */
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+
+
+
+
+
+
+.menu-background {
+    width: 50%;
+    height: 100%;
+    object-fit: cover; /* Para cobrir todo o espaço */
+    filter: brightness(0.5); /* Ajusta o brilho da imagem (opcional) */
+    background-color;
+}
+
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column; /* Alinha o texto verticalmente */
+    justify-content: center; /* Centraliza verticalmente */
+    align-items: center; /* Centraliza horizontalmente */
+    color: white; /* Cor do texto */
+    text-align: center; /* Alinha o texto no centro */
+    padding: 20px; /* Espaçamento interno */
+}
+
+.text {
+    width: 100%; /* Largura total do texto */
+}
+
+.card-title {
+    font-size: 1.5rem; /* Tamanho da fonte */
+    margin-bottom: 0.5rem; /* Espaçamento inferior */
+}
+
+.card-text {
+    font-size: 1rem; /* Tamanho da fonte */
+    margin-bottom: 1rem; /* Espaçamento inferior */
+}
+
+.list-unstyled {
+    margin-bottom: 1.5rem; /* Espaçamento inferior */
+}
+
+.card {
+    height: 320px; /* Altura fixa */
+    background: none;
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    color: white;
+}
+
+.card-image {
+    width: 50%;
+    float: left;
+}
+
+.cart-count {
+color:white
+}
+
+.menu-background {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -1;
+    background: linear-gradient(rgba(247, 95, 8, 0.815), rgba(190, 140, 106, 0.5)), url('imgs/2.jpeg'); /* Gradiente com a imagem de fundo */
+    background-size: cover; /* Garantir que a imagem cubra toda a área */
+    background-position: center; /* Centralizar a imagem */
+}
+
+.card-body {
+    width: 50%;
+    float: left;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    
+
+    .card-title {
+        font-size: 1.2rem; /* Tamanho do título */
+        margin-bottom: 0.5rem;
+    }
+    
+    .card-text {
+        font-size: 1rem; /* Tamanho do texto */
+        margin-bottom: 1rem;
+    }
+    
+    .list-unstyled {
+        font-size: 1rem; /* Tamanho da lista */
+        margin-bottom: 1.5rem;
+    }
+}
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 50%; /* Ocupa metade da largura do card */
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    color: white;
+    text-align: left;
+    padding: 20px;
+}
+
+
+
+.quantity-button {
+    width: 30px;
+    height: 30px;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+    background-color: #f8f9fa;
+    color: #495057;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.quantity-button:hover {
+    background-color: #e9ecef;
+}
+
+.quantity-button:active {
+    background-color: #d1d3d5;
+}
+
+.quantity-number {
+    margin: 0 10px;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.btn-warning {
+    background-color: #ffc107; /* Match the provided image's yellow */
+    border-color: #ffc107;
+}
+
+.btn-warning:hover {
+    background-color: #e0a800;
+    border-color: #e0a800;
+}

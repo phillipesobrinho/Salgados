@@ -1,0 +1,40 @@
+/* ... (outros estilos) */
+.navbar {
+    background-color: #236635; /* Dark green background */
+    color: white; /* White text */
+    padding: 1rem; /* Adjust padding as needed */
+}
+
+.order-items .row {
+    border-bottom: 1px solid #dee2e6; /* Linha de separação entre os itens */
+    padding-bottom: 10px; /* Espaçamento abaixo da linha */
+    margin-bottom: 10px; /* Espaçamento abaixo do item */
+}
+
+.elemento {
+    text-align: -webkit-match-parent;
+    text-align: match-parent;
+    text-align: inherit;
+}
+
+.order-items .row:last-child {
+    border-bottom: none; /* Remove a linha inferior do último item */
+}
+
+.order-summary .row {
+    font-size: 1.1rem; /* Tamanho da fonte um pouco maior */
+}
+
+.order-summary .total {
+    font-size: 1.3rem; /* Tamanho da fonte maior para o total */
+}
+
+/* Estilos para telas menores */
+@media (max-width: 768px) {
+    .order-items .row {
+        flex-direction: column; /* Coloca os itens em coluna em telas menores */
+    }
+
+    .order-items .col-md-8,
+    .order-items .col-md-4 {
+        text-align: left; /* Alinha o}

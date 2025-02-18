@@ -1,0 +1,8 @@
+{
+    "status": "aprovado",
+    "referencia": "REF-123456"
+  }
+{
+    "status": "erro",
+    "mensagem": "MENSAGEM_DE_ERRO_AQUI"
+  }

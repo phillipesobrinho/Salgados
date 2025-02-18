@@ -1,0 +1,89 @@
+body {
+    font-family: sans-serif;
+}
+
+.cart-items {
+    display: flex;
+    flex-direction: column; /* Stack items vertically */
+    gap: 1rem; /* Space between items */
+}
+
+
+.card {
+    border: 1px solid #dee2e6; /* Light border */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+
+.card-body {
+    padding: 1.5rem; /* Increased padding */
+}
+
+.item-price {
+    font-weight: bold;
+    margin-bottom: 0.5rem; /* Space below price */
+}
+
+.quantity {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem; /* Space between buttons and input */
+}
+
+.quantity input {
+    width: 4rem; /* Fixed width for input */
+    text-align: center;
+}
+
+.summary .card-body {
+    padding: 2rem; /* Increased padding for summary */
+}
+
+.summary p {
+    margin-bottom: 0.5rem; /* Space between summary items */
+}
+
+.summary .total {
+    font-size: 1.2rem; /* Larger total font */
+}
+
+.btn-warning {
+    background-color: #ffc107; /* Match the provided image's yellow */
+    border-color: #ffc107;
+}
+
+.btn-warning:hover {
+    background-color: #e0a800;
+    border-color: #e0a800;
+}
+
+.navbar {
+    background-color: #236635; /* Dark green background */
+    color: white; /* White text */
+    padding: 1rem; /* Adjust padding as needed */
+}
+
+.navbar-brand {
+    display: flex;
+    align-items: center; /* Vertically align logo and text */
+}
+
+.navbar-brand img {
+    margin-right: 0.5rem; /* Space between logo and text */
+}
+
+.navbar-nav .nav-link {
+    color: white !important; /* White link text */
+    margin-left: 1rem; /* Space between links */
+}
+
+.discount {
+    background-color: #f0ad4e; /* Yellow discount background */
+    color: #fff; /* White text */
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+}
+
+.cart {
+    cursor: pointer; /* Make cart clickable */
+}
