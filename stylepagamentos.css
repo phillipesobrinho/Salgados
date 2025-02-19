@@ -12,7 +12,7 @@
 }
 
 .elemento {
-    text-align: -webkit-match-parent;
+  
     text-align: match-parent;
     text-align: inherit;
 }
@@ -38,3 +38,6 @@
     .order-items .col-md-8,
     .order-items .col-md-4 {
         text-align: left; /* Alinha o}
+
+
+        

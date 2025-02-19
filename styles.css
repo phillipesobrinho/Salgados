@@ -20,7 +20,7 @@ body {
 
 
 .elemento {
-    text-align: -webkit-match-parent;
+  
     text-align: match-parent;
     text-align: inherit;
 }
@@ -34,6 +34,8 @@ main.container {
     margin-bottom: 20px; /* Espaço entre os cards */
     margin-top: 20px
 }
+
+
 
 /* Espaçamento superior para a primeira imagem */
 .box-gourmet {
@@ -58,7 +60,7 @@ main.container {
 }
 
 .elemento {
-    text-align: -webkit-match-parent;
+
     text-align: match-parent;
     text-align: inherit;
 }

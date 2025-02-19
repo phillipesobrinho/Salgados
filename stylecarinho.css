@@ -30,11 +30,7 @@ body {
     gap: 0.5rem; /* Space between buttons and input */
 }
 
-.elemento {
-    text-align: -webkit-match-parent;
-    text-align: match-parent;
-    text-align: inherit;
-}
+
 .quantity input {
     width: 4rem; /* Fixed width for input */
     text-align: center;

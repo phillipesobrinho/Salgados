@@ -1,55 +1,50 @@
-document.addEventListener('DOMContentLoaded', function () {
-    const cartItemsContainer = document.getElementById('cart-items');
-    const subtotalElement = document.querySelector('.subtotal');
-    const deliveryElement = document.querySelector('.delivery');
-    const totalElement = document.querySelector('.total');
-    const form = document.getElementById('formulario-entrega');
-    const retirarLocal = document.getElementById('retirar-local');
-    const proceedButton = document.querySelector('.proceed-button');
-    const deliveryDateInput = document.getElementById('delivery-date');
-    const deliveryTimeInput = document.getElementById('delivery-time');
-    const addressFields = document.querySelector('.address-fields');
-    const entregarMorada = document.getElementById('delivery-address');
-    const pickupFields = document.querySelector('.pickup-fields');
-    
+document.addEventListener('DOMContentLoaded', () => {
+    // Seleciona os elementos do DOM
+    const cartItemsContainer = document.getElementById('cart-items'); // Container para os itens do carrinho
+    const subtotalElement = document.querySelector('.subtotal'); // Elemento para exibir o subtotal
+    const deliveryElement = document.querySelector('.delivery'); // Elemento para exibir a taxa de entrega
+    const totalElement = document.querySelector('.total'); // Elemento para exibir o total
+    const form = document.getElementById('formulario-entrega'); // Formulário de entrega
+    const retirarLocal = document.getElementById('retirar-local'); // Radio button para "Retirar no local"
+    const entregarMorada = document.getElementById('delivery-address'); // Radio button para "Entregar na morada"
+    const addressFields = document.querySelector('.address-fields'); // Campos de endereço
+    const pickupFields = document.querySelector('.pickup-fields'); // Campos de local de retirada
 
+    // Recupera os itens do carrinho do localStorage ou inicializa um array vazio
     let cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
-    let deliveryFee = 5.00;
+    let deliveryFee = 5.00; // Valor da taxa de entrega para entrega na morada
+    let taxaEntrega = 5; // Valor inicial da taxa de entrega
 
-    // Define a data mínima para amanhã
+    // Define a data mínima para entrega como amanhã
     const tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
     const tomorrowFormatted = tomorrow.toISOString().slice(0, 10);
-    deliveryDateInput.min = tomorrowFormatted;
+    document.getElementById('delivery-date').min = tomorrowFormatted;
 
+    // Função para calcular o subtotal e o total
     function calcularTotal() {
-        let subtotal = 0.00;
+        let subtotal = 0;
         cartItems.forEach(item => {
             subtotal += item.preco_unitario * item.quantidade;
         });
 
-        const taxaEntrega = document.getElementById('retirar-local').checked ? 0.00 : deliveryFee;
-
         const total = subtotal + taxaEntrega;
-        return { subtotal, taxaEntrega, total };
+        return { subtotal, total };
     }
 
-
+    // Função para atualizar o resumo do pedido
     function atualizarResumo() {
-        const { subtotal, taxaEntrega, total } = calcularTotal();
-
+        const { subtotal, total } = calcularTotal();
         subtotalElement.textContent = `${subtotal.toFixed(2)}€`;
         deliveryElement.textContent = `${taxaEntrega.toFixed(2)}€`;
         totalElement.textContent = `${total.toFixed(2)}€`;
     }
 
-    if (cartItemsContainer) {
-        atualizarCarrinho();
-    }
-
+    // Função para atualizar a exibição dos itens do carrinho
     function atualizarCarrinho() {
-        cartItemsContainer.innerHTML = "";
+        cartItemsContainer.innerHTML = ""; // Limpa o container de itens
         cartItems.forEach((item, index) => {
+            // Cria um novo elemento div para cada item
             const itemDiv = document.createElement('div');
             itemDiv.innerHTML = `
                 <div class="card mb-3">
@@ -70,91 +65,95 @@ document.addEventListener('DOMContentLoaded', function () {
                     </div>
                 </div>
             `;
-            cartItemsContainer.appendChild(itemDiv);
+            cartItemsContainer.appendChild(itemDiv); // Adiciona o item ao container
         });
 
-        const removeButtons = document.querySelectorAll('.remover-item');
+        // Adiciona event listeners aos botões de remover item
+        const removeButtons = cartItemsContainer.querySelectorAll('.remover-item');
         removeButtons.forEach(button => {
             button.addEventListener('click', removerItem);
         });
 
-        atualizarResumo();
+        atualizarResumo(); // Atualiza o resumo do pedido
     }
 
+    // Função para remover um item do carrinho
     function removerItem(event) {
-        const index = event.target.dataset.index;
-        cartItems.splice(index, 1);
-        localStorage.setItem('cartItems', JSON.stringify(cartItems));
-        atualizarCarrinho();
+        const index = event.target.dataset.index; // Obtém o índice do item a ser removido
+        cartItems.splice(index, 1); // Remove o item do array
+        localStorage.setItem('cartItems', JSON.stringify(cartItems)); // Salva o carrinho atualizado no localStorage
+        atualizarCarrinho(); // Atualiza a exibição do carrinho
     }
 
-    retirarLocal.addEventListener('change', function () {
-        if (this.checked) {
-            addressFields.style.display = 'none';
-            pickupFields.style.display = 'block';
-            document.getElementById('delivery-date').required = false;  // Use document.getElementById here
-            document.getElementById('delivery-time').required = false;  // And here
-            document.getElementById('pickup-date').required = true;
-            document.getElementById('pickup-time').required = true;
-
-            atualizarResumo();
-        }
+    // Event listeners para os radio buttons de entrega
+    retirarLocal.addEventListener('change', () => {
+        addressFields.style.display = 'none'; // Esconde os campos de endereço
+        pickupFields.style.display = 'block'; // Exibe os campos de local de retirada
+        document.getElementById('delivery-date').required = false; // Define os campos de data e hora de entrega como não obrigatórios
+        document.getElementById('delivery-time').required = false;
+        document.getElementById('pickup-date').required = true;  // Define os campos de data e hora de retirada como obrigatórios
+        document.getElementById('pickup-time').required = true;
+        taxaEntrega = 0; // Define a taxa de entrega como 0
+        localStorage.setItem('taxaEntrega', taxaEntrega); // Salva a taxa de entrega no localStorage
+        atualizarResumo(); // Atualiza o resumo do pedido
     });
 
-    entregarMorada.addEventListener('change', function () {
-        if (this.checked) {
-            addressFields.style.display = 'block';
-            pickupFields.style.display = 'none';
-            document.getElementById('delivery-date').required = true; // Use document.getElementById here
-            document.getElementById('delivery-time').required = true; // And here
-            document.getElementById('pickup-date').required = false;
-            document.getElementById('pickup-time').required = false;
-
-            atualizarResumo();
-        }
+    entregarMorada.addEventListener('change', () => {
+        addressFields.style.display = 'block'; // Exibe os campos de endereço
+        pickupFields.style.display = 'none'; // Esconde os campos de local de retirada
+        document.getElementById('delivery-date').required = true; // Define os campos de data e hora de entrega como obrigatórios
+        document.getElementById('delivery-time').required = true;
+        document.getElementById('pickup-date').required = false; // Define os campos de data e hora de retirada como não obrigatórios
+        document.getElementById('pickup-time').required = false;
+        taxaEntrega = deliveryFee; // Define a taxa de entrega como o valor padrão
+        localStorage.setItem('taxaEntrega', taxaEntrega); // Salva a taxa de entrega no localStorage
+        atualizarResumo(); // Atualiza o resumo do pedido
     });
 
-    form.addEventListener('submit', function (event) {
-        event.preventDefault();
+    // Event listener para o envio do formulário
+    form.addEventListener('submit', (event) => {
+        event.preventDefault(); // Impede o envio padrão do formulário
 
-        // Use document.getElementById INSIDE the event handler
-        if (!document.getElementById('delivery-date').value || !document.getElementById('delivery-time').value) {
-            alert("Por favor, selecione a data e hora de entrega.");
-            return;
-        }
+        const deliveryDate = document.getElementById('delivery-date').value;  // Obtem os valores dos campos
+        const deliveryTime = document.getElementById('delivery-time').value;
 
-        let deliveryInfoForm = {};
+        let deliveryInfoForm = {
+            tipoEntrega: retirarLocal.checked ? 'levantar-local' : 'entrega-morada', // Define o tipo de entrega
+        };
 
-        if (retirarLocal.checked) {
-            deliveryInfoForm = {
-                tipoEntrega: 'levantar-local'
-            };
-        } else {
+        if (entregarMorada.checked) { // Se a entrega for na morada
             deliveryInfoForm = {
                 tipoEntrega: 'entrega-morada',
-                zone: document.getElementById('zone').value,
+                name: document.getElementById('name').value, // Obtem os dados do formulario
                 address: document.getElementById('address').value,
                 number: document.getElementById('number').value,
                 complement: document.getElementById('complement').value,
                 postalCode: document.getElementById('postal-code').value,
                 phone: document.getElementById('phone').value,
-                deliveryDate: document.getElementById('delivery-date').value, // Use document.getElementById here
-                deliveryTime: document.getElementById('delivery-time').value // And here
+                deliveryDate, // Adiciona data e hora
+                deliveryTime,
+                paymentMethod: document.getElementById('paymentMethod').value,
             };
         }
+
         const orderData = {
-            id: '156543', // Ou gere um ID real para o pedido
-            date: new Date().toISOString(),
-            deliveryInfo: deliveryInfoForm
+            deliveryInfo: deliveryInfoForm, // Dados de entrega
+            cartItems: cartItems, // Itens do carrinho
+            taxaEntrega: taxaEntrega, // Taxa de entrega
         };
 
-        localStorage.setItem('orderData', JSON.stringify(orderData));
-        localStorage.setItem('cartItems', JSON.stringify(cartItems));
+        localStorage.setItem('orderData', JSON.stringify(orderData)); // Salva os dados do pedido no localStorage
+        localStorage.setItem('cartItems', JSON.stringify(cartItems)); // Salva os itens do carrinho no localStorage
 
         console.log("Dados do pedido salvos:", JSON.stringify(orderData));
 
+        // Redireciona para a página de pagamento
         setTimeout(() => {
             window.location.href = 'pagamento.html';
         }, 100);
     });
+
+    if (cartItemsContainer) {
+        atualizarCarrinho(); // Atualiza a exibição do carrinho ao carregar a página
+    }
 });

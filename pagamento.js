@@ -7,15 +7,14 @@ document.addEventListener('DOMContentLoaded', function () {
     const gerarReferenciaButton = document.getElementById('gerarReferencia');
     const mensagemDiv = document.getElementById('mensagem');
     const referenciaDiv = document.getElementById('referencia');
-    const deliveryInfo = JSON.parse(localStorage.getItem('deliveryInfo')) || {};
-    console.log("Dados de entrega recuperados:", deliveryInfo);
+
+    const orderData = JSON.parse(localStorage.getItem('orderData'));
+    const cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+    const taxaEntrega = parseFloat(localStorage.getItem('taxaEntrega')) || 0.00;
 
     function atualizarResumoPedido() {
-        const cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
         let subtotal = 0;
-
         orderItemsContainer.innerHTML = "";
-
         cartItems.forEach(item => {
             const itemDiv = document.createElement('div');
             itemDiv.innerHTML = `
@@ -32,32 +31,44 @@ document.addEventListener('DOMContentLoaded', function () {
         });
 
         subtotalElement.textContent = `${subtotal.toFixed(2)}€`;
-
-        const taxaEntrega = parseFloat(localStorage.getItem('taxaEntrega')) || 0.00;
         taxaEntregaElement.textContent = `${taxaEntrega.toFixed(2)}€`;
-
         const total = subtotal + taxaEntrega;
         totalElement.textContent = `${total.toFixed(2)}€`;
     }
 
     function exibirInformacoesEntrega() {
-        if (deliveryInfo && Object.keys(deliveryInfo).length > 0 && deliveryInfo.address !== "N/A") {
-            document.getElementById('zone').textContent = deliveryInfo.zone || "N/A";
-            document.getElementById('address').textContent = deliveryInfo.address || "N/A";
-            document.getElementById('number').textContent = deliveryInfo.number || "N/A";
-            document.getElementById('complement').textContent = deliveryInfo.complement || "N/A";
-            document.getElementById('postalCode').textContent = deliveryInfo.postalCode || "N/A";
-            document.getElementById('phone').textContent = deliveryInfo.phone || "N/A";
-        } else {
-            deliveryInfoContainer.innerHTML = "<p>Informações de entrega não encontradas.</p>";
+        try {
+            if (orderData && orderData.deliveryInfo) {
+                const deliveryInfo = orderData.deliveryInfo;
+
+                const nome = deliveryInfo.name ? `<p><strong>Nome:</strong> ${deliveryInfo.name}</p>` : "";
+                const morada = deliveryInfo.address ? `<p><strong>Morada:</strong> ${deliveryInfo.address}, ${deliveryInfo.number || "N/A"} ${deliveryInfo.complement ? ', ' + deliveryInfo.complement : ''}</p>` : "";
+                const codigoPostal = deliveryInfo.postalCode ? `<p><strong>Código Postal:</strong> ${deliveryInfo.postalCode}</p>` : "";
+                const telemovel = deliveryInfo.phone ? `<p><strong>Telemóvel:</strong> ${deliveryInfo.phone}</p>` : "";
+                const metodoPagamento = deliveryInfo.paymentMethod ? `<p><strong>Método de Pagamento:</strong> ${deliveryInfo.paymentMethod}</p>` : "";
+
+                deliveryInfoContainer.innerHTML = `
+                    ${nome}
+                    ${morada}
+                    ${codigoPostal}
+                    ${telemovel}
+                    ${metodoPagamento}
+                `;
+            } else {
+                deliveryInfoContainer.innerHTML = "<p>Informações de entrega não encontradas.</p>";
+            }
+        } catch (error) {
+            console.error("Erro ao exibir informações de entrega:", error);
+            deliveryInfoContainer.innerHTML = "<p>Ocorreu um erro ao exibir as informações de entrega.</p>";
         }
     }
+
 
     atualizarResumoPedido();
     exibirInformacoesEntrega();
 
     window.addEventListener('storage', function (event) {
-        if (event.key === 'cartItems' || event.key === 'deliveryInfo' || event.key === 'taxaEntrega') {
+        if (event.key === 'cartItems' || event.key === 'orderData' || event.key === 'taxaEntrega') {
             atualizarResumoPedido();
             exibirInformacoesEntrega();
         }
@@ -68,87 +79,67 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const total = parseFloat(totalElement.textContent.replace('€', ''));
         const cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
-        const deliveryInfo = JSON.parse(localStorage.getItem('deliveryInfo')) || {};
+        const deliveryInfo = orderData.deliveryInfo;
+
+        const dataToSend = {  // Dados consistentes para o backend
+            cliente: {
+                name: deliveryInfo.name,
+                address: deliveryInfo.address,
+                number: deliveryInfo.number,
+                complement: deliveryInfo.complement,
+                postalCode: deliveryInfo.postalCode, // Nome do campo consistente com o localStorage e o banco de dados
+                phone: deliveryInfo.phone,
+            },
+            itens: cartItems.map(item => ({
+                produto_id: item.produto_id,
+                quantidade: item.quantidade,
+                preco_unitario: item.preco_unitario,
+            })),
+            total: total,
+            metodo_pagamento: deliveryInfo.paymentMethod,
+        };
+
+        console.log("Dados enviados para o backend:", dataToSend); // Verificação importante
 
         fetch('http://localhost:3000/processar_pedido', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({
-                cliente: deliveryInfo,
-                itens: cartItems,
-                total: total,
-                metodo_pagamento: 'cartao'
-            })
+            body: JSON.stringify(dataToSend)
         })
-            .then(response => {
-                if (!response.ok) {
-                    return response.json().then(err => { throw new Error(err.message || `HTTP error! status: ${response.status}`); });
-                }
-                return response.json();
-            })
-            .then(data => {
-                if (data.status === 'aprovado') {
-                    mensagemDiv.textContent = "Pedido realizado com sucesso!";
-                    referenciaDiv.textContent = data.referencia;
-                    localStorage.removeItem('cartItems');
-                    // window.location.href = 'confirmacao.html'; // Opcional: Redirecionar para página de confirmação
-                } else {
-                    mensagemDiv.textContent = data.mensagem || "Erro ao processar pagamento.";
-                    referenciaDiv.textContent = ""; // Limpa a referência em caso de erro
-                }
-            })
-            .catch(error => {
-                console.error("Erro na requisição:", error);
-                mensagemDiv.textContent = "Erro ao finalizar pedido. Tente novamente mais tarde.";
-                referenciaDiv.textContent = ""; // Limpa a referência em caso de erro
-            });
+        .then(response => {
+            if (!response.ok) {
+                return response.json().then(err => { throw new Error(err.message || `HTTP error! status: ${response.status}`); });
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.status === 'aprovado') {
+                mensagemDiv.textContent = "Seu pedido foi concluído, te ligaremos para confirmar!";
+                referenciaDiv.textContent = data.referencia;
+                localStorage.removeItem('cartItems');
+                localStorage.removeItem('orderData');
+                atualizarResumoPedido();
+            } else {
+                mensagemDiv.textContent = data.mensagem || "Erro ao processar pagamento.";
+                referenciaDiv.textContent = "";
+            }
+        })
+        .catch(error => {
+            console.error("Erro na requisição:", error);
+            mensagemDiv.textContent = "Erro ao finalizar pedido. Tente novamente mais tarde.";
+            referenciaDiv.textContent = "";
+        });
     });
 
     atualizarResumoPedido();
     exibirInformacoesEntrega();
 
     window.addEventListener('storage', function (event) {
-        if (event.key === 'cartItems' || event.key === 'deliveryInfo' || event.key === 'taxaEntrega') {
+        if (event.key === 'cartItems' || event.key === 'orderData' || event.key === 'taxaEntrega') {
             atualizarResumoPedido();
             exibirInformacoesEntrega();
         }
     });
 });
-
-
-
-
-// document.getElementById('(gerarReferencia)').addEventListener('click', () => {
-//     const cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
-//     const deliveryInfo = JSON.parse(localStorage.getItem('deliveryInfo')) || {};
-//     const total = parseFloat(document.getElementById('resumo-total').textContent.replace('Total: ', ''));
-
-//     fetch('http://localhost:3000/processar_pedido', {
-//         method: 'POST',
-//         headers: {
-//             'Content-Type': 'application/json'
-//         },
-//         body: JSON.stringify({
-//             itens: cartItems,
-//             cliente: deliveryInfo,
-//             total: total
-//         })
-//     })
-//     .then(response => response.json())
-//     .then(data => {
-//         if (data.status === 'aprovado') {
-//             document.getElementById('mensagem').textContent = 'Pedido realizado com sucesso!';
-//             document.getElementById('referencia').textContent = data.referencia;
-//             // Limpar carrinho, redirecionar, etc.
-//         } else {
-//             document.getElementById('mensagem').textContent = data.mensagem || 'Erro ao processar pagamento.';
-//         }
-//     })
-//     .catch(error => {
-//         console.error('Erro na requisição:', error);
-//         document.getElementById('mensagem').textContent = 'Erro ao processar pagamento. Tente novamente mais tarde.';
-//     });
-// });
-// });
