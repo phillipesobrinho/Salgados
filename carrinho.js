@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const totalElement = document.querySelector('.total');
     const cartIcon = document.getElementById('cart-icon');
     const cartCountElement = cartIcon.querySelector('.cart-count');
-    const quantityButtons = document.querySelectorAll('.quantity-button');
+    
 
     let cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
 
