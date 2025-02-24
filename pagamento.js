@@ -63,7 +63,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-
     atualizarResumoPedido();
     exibirInformacoesEntrega();
 
@@ -73,73 +72,17 @@ document.addEventListener('DOMContentLoaded', function () {
             exibirInformacoesEntrega();
         }
     });
+
+    gerarReferenciaButton.textContent = "Finalizar"; // Alterando o texto do botão
 
     gerarReferenciaButton.addEventListener('click', (event) => {
         event.preventDefault();
 
         const total = parseFloat(totalElement.textContent.replace('€', ''));
-        const cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
-        const deliveryInfo = orderData.deliveryInfo;
+        const valorPagamento = (total / 2).toFixed(2); // Calcula 50% do total
 
-        const dataToSend = {  // Dados consistentes para o backend
-            cliente: {
-                name: deliveryInfo.name,
-                address: deliveryInfo.address,
-                number: deliveryInfo.number,
-                complement: deliveryInfo.complement,
-                postalCode: deliveryInfo.postalCode, // Nome do campo consistente com o localStorage e o banco de dados
-                phone: deliveryInfo.phone,
-            },
-            itens: cartItems.map(item => ({
-                produto_id: item.produto_id,
-                quantidade: item.quantidade,
-                preco_unitario: item.preco_unitario,
-            })),
-            total: total,
-            metodo_pagamento: deliveryInfo.paymentMethod,
-        };
+        localStorage.setItem('valorPagamento', valorPagamento); // Salva o valor para a próxima página
 
-        console.log("Dados enviados para o backend:", dataToSend); // Verificação importante
-
-        fetch('http://localhost:3000/processar_pedido', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(dataToSend)
-        })
-        .then(response => {
-            if (!response.ok) {
-                return response.json().then(err => { throw new Error(err.message || `HTTP error! status: ${response.status}`); });
-            }
-            return response.json();
-        })
-        .then(data => {
-            if (data.status === 'aprovado') {
-                mensagemDiv.textContent = "Seu pedido foi concluído, te ligaremos para confirmar!";
-                referenciaDiv.textContent = data.referencia;
-                localStorage.removeItem('cartItems');
-                localStorage.removeItem('orderData');
-                atualizarResumoPedido();
-            } else {
-                mensagemDiv.textContent = data.mensagem || "Erro ao processar pagamento.";
-                referenciaDiv.textContent = "";
-            }
-        })
-        .catch(error => {
-            console.error("Erro na requisição:", error);
-            mensagemDiv.textContent = "Erro ao finalizar pedido. Tente novamente mais tarde.";
-            referenciaDiv.textContent = "";
-        });
-    });
-
-    atualizarResumoPedido();
-    exibirInformacoesEntrega();
-
-    window.addEventListener('storage', function (event) {
-        if (event.key === 'cartItems' || event.key === 'orderData' || event.key === 'taxaEntrega') {
-            atualizarResumoPedido();
-            exibirInformacoesEntrega();
-        }
+        window.location.href = 'confirmacao.html'; // Redireciona para a página de confirmação
     });
 });

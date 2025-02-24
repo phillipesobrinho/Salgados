@@ -46,18 +46,39 @@
         </nav>
     </header>
 
-    <main class="container mt-4">
-        <h2>Pedidos</h2>
-
-        <div class="orders-container">
-        </div>
-    </main>
-
-    <footer class="mt-4">
-        <div class="container text-center">
-            <p>&copy; 2023 Sapeka Salgados</p>
-        </div>
-    </footer>
+    <body>
+ 
+        <main class="container mt-4">
+            <h2>Confirmação de Pedido</h2>
+    
+            <div class="card">
+                <div class="card-body">
+                    <p>Seu pedido foi enviado para confirmação!</p>
+                    <p>Para oficializar a encomenda, você deverá pagar 50% do valor total agora e os outros 50% no dia da entrega.</p>
+                    <p>O valor a ser pago agora é: <span id="valorPagamento"></span></p>
+    
+                    <h3>Dados para Pagamento</h3>
+                    <p><strong>MBWay:</strong> 912345678</p>
+                    <p><strong>NIB:</strong> 0007 0000 00000000000 23</p>
+    
+                    <p>Assim que o pagamento for confirmado, você receberá uma mensagem de confirmação.</p>
+                </div>
+            </div>
+    
+          
+        </main>
+    
+        <footer class="mt-4">
+            <div class="container text-center">
+                <p>&copy; 2024 Beto Salgados</p>
+            </div>
+        </footer>
+    
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="confirmacao.js"></script>
+    </body>
+    
+    </html>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
